@@ -1,0 +1,4 @@
+20240815	17:08:07	231d44b6-f444-4dad-a4cd-f95ae1d7e752	ReferenceError: Cannot access 'UserModel' before initialization	POST	/api/users/register	undefined
+20240815	17:09:54	f40f8029-a298-43ac-8faa-4cf8a1f166ce	ReferenceError: Cannot access 'UserModel' before initialization	POST	/api/users/register	undefined
+20240815	17:10:03	68268109-170b-4257-877e-22fe31c28c5b	ReferenceError: Cannot access 'UserModel' before initialization	POST	/api/users/register	undefined
+20240815	17:14:30	a65d47d3-2a88-4931-ad86-435ddec51e6c	SyntaxError: Expected double-quoted property name in JSON at position 65	POST	/api/users/lgoin	undefined
