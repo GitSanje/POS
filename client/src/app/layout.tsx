@@ -5,8 +5,8 @@ import { Metadata } from 'next';
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: '',
-  description: 'The official Coding Beauty home page.',
+  title: 'Vendify',
+  description: 'The official Vendify.',
   icons: {
     icon: '/favicon.png',
   },

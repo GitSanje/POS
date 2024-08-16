@@ -1,10 +1,16 @@
 'use client'
-// import React, { useEffect } from "react";
 
+import React, { useState } from "react";
+// require('dotenv').config()
 import './user.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import Input from "../../../../components/Input/Input";
 import Button from "../../../../components/Button/Button";
+
+import { useRouter } from 'next/navigation';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import axios from "axios";
 
 
 interface Props {
@@ -12,43 +18,62 @@ interface Props {
 }
 
 const LoginSignup: React.FC<Props> = ({searchParams}) => {
-    console.log(searchParams);
-    
+  
+  
     const tab = searchParams.get('tab') || 'login';
+    const router = useRouter()
 
-    
+  const [loginData, setLoginData] = useState({ email: '', password: '' });
+  const [registerData, setRegisterData] = useState({ name: '', email: '', password: '', password_confirmation: '' });
+
+
+  const handleLoginSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+        const res = await fetch(`http://localhost:3500/api/users/register`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(loginData),
+        });
+        if (!res.ok) {
+            const { error } = await res.json();
+            throw new Error(error);
+        }
+        toast.success('Login successful!');
+        router.push('/protected');
+    } catch (error) {
+        toast.error('Login failed. Please check your credentials.');
+    }
+};
+
+const handleRegisterSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+        const res = await fetch('/api/auth/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(registerData),
+        });
+        if (!res.ok) {
+            const { error } = await res.json();
+            throw new Error(error);
+        }
+        toast.success('Registration successful! Please login.');
+        router.push('?tab=login');
+    } catch (error) {
+        toast.error('Registration failed. Please try again.');
+    }
+};
 
   const social_icons =
     "btn btn-link btn-floating mx-1 bg-gray-300  text-gray-500  rounded-full hover:bg-indigo-400 hover:text-white  ";
   const $active = "bg-indigo-600 text-white";
   const $button =
     "inline-block font-semibold text-black bg-gray-300 rounded h-10 w-32 flex items-center justify-center ";
-
-//   useEffect(() => {
-//     function switchTab(
-//       activeTabId: string,
-//       inactiveTabId: string,
-//       activeContentId: string,
-//       inactiveContentId: string
-//     ) {
-//       document.getElementById(activeTabId)
-//         ?.addEventListener("click", function (e) {
-//           e.preventDefault();
-//           document.getElementById(activeContentId)?.classList.remove("hidden");
-//           document.getElementById(inactiveContentId)?.classList.add("hidden");
-//           this.classList.add(...`${$active}`.split(' '));
-//           document.getElementById(inactiveTabId)?.classList.remove(...`${$active}`.split(' '));
-//           localStorage.setItem("activeTab", activeTabId);
-//         });
-//     }
-
-//     switchTab("tab-login", "tab-register", "pills-login", "pills-register");
-//     switchTab("tab-register", "tab-login", "pills-register", "pills-login");
-
-//     const activeTab = localStorage.getItem('activeTab') || 'tab-login';
-//     document.getElementById(activeTab)?.click();
-
-//   }, [$active]);
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 bg-gradient-to-r from-indigo-500">
@@ -78,7 +103,7 @@ const LoginSignup: React.FC<Props> = ({searchParams}) => {
           <div id="pills-login" className={`tab-pane fade ${tab === 'login' ? 'show active' : 'hidden'}`}>
             <form
               method="POST"
-              action=""
+              onSubmit={handleLoginSubmit}
               className="bg-white p-6 rounded-lg shadow-md"
             >
               <div className="text-center mb-3">
@@ -98,6 +123,7 @@ const LoginSignup: React.FC<Props> = ({searchParams}) => {
                 placeholder="Email or username"
                 name="email"
                 label="Email or username"
+                onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
               />
 
               <Input
@@ -106,6 +132,7 @@ const LoginSignup: React.FC<Props> = ({searchParams}) => {
                 placeholder="Password"
                 name="password"
                 label="Password"
+                onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
               />
 
               <div className="flex justify-between items-center mb-4">
@@ -138,6 +165,7 @@ const LoginSignup: React.FC<Props> = ({searchParams}) => {
           <div id="pills-register" className={`tab-pane fade ${tab === 'register' ? 'show active' : 'hidden'}`}>
             <form
               method="POST"
+              onSubmit={handleRegisterSubmit}
               className="bg-white p-6 rounded-lg shadow-md"
             >
               <div className="text-center mb-3">
@@ -154,6 +182,7 @@ const LoginSignup: React.FC<Props> = ({searchParams}) => {
                 placeholder="Full Name"
                 name="name"
                 label="Full Name"
+                onChange={(e) => setRegisterData({ ...registerData, name: e.target.value })}
               />
               <Input
                 type="email"
@@ -161,6 +190,7 @@ const LoginSignup: React.FC<Props> = ({searchParams}) => {
                 placeholder="Email"
                 name="email"
                 label="Email"
+                onChange={(e) => setRegisterData({ ...registerData, email: e.target.value })}
               />
               <Input
                 type="password"
@@ -168,6 +198,7 @@ const LoginSignup: React.FC<Props> = ({searchParams}) => {
                 placeholder="Password"
                 name="password"
                 label="Password"
+                onChange={(e) => setRegisterData({ ...registerData, password: e.target.value })}
               />
               <Input
                 type="password"
@@ -175,6 +206,7 @@ const LoginSignup: React.FC<Props> = ({searchParams}) => {
                 placeholder="Repeat Password"
                 name="password_confirmation"
                 label="Repeat Password"
+                onChange={(e) => setRegisterData({ ...registerData, password_confirmation: e.target.value })}
               />
 
               <div className="flex justify-center items-center mb-4">
@@ -184,7 +216,7 @@ const LoginSignup: React.FC<Props> = ({searchParams}) => {
 
               <Button
                 type="submit"
-                className="w-full bg-indigo-500 text-white py-2 rounded-lg"
+                className="w-full bg-indigo-500 text-white py-2 rounded-lg "
                 id="signupbtn"
               >
                 Sign up
@@ -198,3 +230,6 @@ const LoginSignup: React.FC<Props> = ({searchParams}) => {
 };
 
 export default LoginSignup;
+
+
+

@@ -9,7 +9,7 @@ const Button: React.FC<ButtonProps> = ({ children, className, ...props }) => {
   return (
     //This error occurs because TypeScript needs to be configured to understand JSX syntax.
     <button 
-      className={twMerge('w-full bg-indigo-500 text-white py-2 rounded-lg', className)}
+      className={twMerge('w-full bg-indigo-500 text-white py-2 rounded-lg hover:bg-indigo-700', className)}
       {...props}
     > 
       {children}
