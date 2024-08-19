@@ -1,73 +1,118 @@
-'use client'
+"use client";
 
-import React, { useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 // require('dotenv').config()
-import './user.css';
-import '@fortawesome/fontawesome-free/css/all.min.css';
+import "./user.css";
+import "@fortawesome/fontawesome-free/css/all.min.css";
 import Input from "../../../../components/Input/Input";
 import Button from "../../../../components/Button/Button";
 
-import { useRouter } from 'next/navigation';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { useRouter } from "next/navigation";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
-
+import { log } from "console";
 
 interface Props {
-    searchParams: URLSearchParams;
+  searchParams: URLSearchParams;
 }
 
-const LoginSignup: React.FC<Props> = ({searchParams}) => {
-  
-  
-    const tab = searchParams.get('tab') || 'login';
-    const router = useRouter()
+interface RegisterData {
+  username: string;
+  phone: string;
+  email: string;
+  password: string;
+  password_confirmation: string;
+}
+interface LoginData {
+  email: string,
+  password: string
+}
+const LoginSignup: React.FC<Props> = ({ searchParams }) => {
+  const tab = searchParams.get("tab") || "login";
+  const router = useRouter();
 
-  const [loginData, setLoginData] = useState({ email: '', password: '' });
-  const [registerData, setRegisterData] = useState({ name: '', email: '', password: '', password_confirmation: '' });
+  const [loginData, setLoginData] = useState<LoginData>({ email: "", password: "" });
+  const [registerData, setRegisterData] = useState<RegisterData>({
+    username: "",
+    phone: "",
+    email: "",
+    password: "",
+    password_confirmation: "",
+  });
 
+  console.log(JSON.stringify(loginData));
+  
 
   const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-        const res = await fetch(`http://localhost:3500/api/users/register`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(loginData),
+      const res = await fetch(`http://localhost:3500/api/users/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(loginData),
+      });
+      if (!res.ok) {
+        const datares = await res.json();
+        console.log(datares);
+        
+        toast.error(datares.error, {
+          autoClose: 2000,
         });
-        if (!res.ok) {
-            const { error } = await res.json();
-            throw new Error(error);
-        }
-        toast.success('Login successful!');
-        router.push('/protected');
+        return;
+      }
+      toast.success("Login successful!");
+      router.push("/");
     } catch (error) {
-        toast.error('Login failed. Please check your credentials.');
+      toast.error("Login failed. Please check your credentials.");
     }
-};
+  };
 
-const handleRegisterSubmit = async (e: React.FormEvent) => {
+  const handleRegisterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-        const res = await fetch('/api/auth/register', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(registerData),
+      const res = await fetch("http://localhost:3500/api/users/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(registerData),
+      });
+      console.log(res);
+      
+      if (!res.ok) {
+        const datares = await res.json();
+        
+        
+
+        toast.error(datares.message, {
+          autoClose: 2000,
         });
-        if (!res.ok) {
-            const { error } = await res.json();
-            throw new Error(error);
-        }
-        toast.success('Registration successful! Please login.');
-        router.push('?tab=login');
+        return;
+      }
+      toast.success("Registration successful! Please login.");
+      router.push("?tab=login");
     } catch (error) {
-        toast.error('Registration failed. Please try again.');
+      toast.error("Registration failed. Please try again.");
     }
-};
+  };
+
+  const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    const { name, value } = e.target;
+
+    setRegisterData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+
+    setLoginData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
   const social_icons =
     "btn btn-link btn-floating mx-1 bg-gray-300  text-gray-500  rounded-full hover:bg-indigo-400 hover:text-white  ";
@@ -81,7 +126,9 @@ const handleRegisterSubmit = async (e: React.FormEvent) => {
         <ul className="flex justify-around mb-6">
           <li className="nav-item">
             <a
-              className={`nav-link ${$button} ${tab === 'login' ? $active : ''}`}
+              className={`nav-link ${$button} ${
+                tab === "login" ? $active : ""
+              }`}
               id="tab-login"
               href="?tab=login"
             >
@@ -90,9 +137,11 @@ const handleRegisterSubmit = async (e: React.FormEvent) => {
           </li>
           <li className="nav-item">
             <a
-                 className={`nav-link ${$button} ${tab === 'register' ? $active : ''}`}
+              className={`nav-link ${$button} ${
+                tab === "register" ? $active : ""
+              }`}
               id="tab-register"
-             href="?tab=register"
+              href="?tab=register"
             >
               REGISTER
             </a>
@@ -100,15 +149,21 @@ const handleRegisterSubmit = async (e: React.FormEvent) => {
         </ul>
 
         <div id="pills-content">
-          <div id="pills-login" className={`tab-pane fade ${tab === 'login' ? 'show active' : 'hidden'}`}>
+          <div
+            id="pills-login"
+            className={`tab-pane fade ${
+              tab === "login" ? "show active" : "hidden"
+            }`}
+          >
             <form
               method="POST"
               onSubmit={handleLoginSubmit}
               className="bg-white p-6 rounded-lg shadow-md"
             >
               <div className="text-center mb-3">
-                
-             <p className="text-lg font-semibold pb-2 text-black">Sign in with:</p>
+                <p className="text-lg font-semibold pb-2 text-black">
+                  Sign in with:
+                </p>
                 <div className="social_accounts">
                   <Button className={social_icons} type="button">
                     <i className="fab fa-google"></i>
@@ -123,7 +178,8 @@ const handleRegisterSubmit = async (e: React.FormEvent) => {
                 placeholder="Email or username"
                 name="email"
                 label="Email or username"
-                onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
+                value={loginData.email}
+                onChange={handleOnChange}
               />
 
               <Input
@@ -132,13 +188,20 @@ const handleRegisterSubmit = async (e: React.FormEvent) => {
                 placeholder="Password"
                 name="password"
                 label="Password"
-                onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
+                value={loginData.password}
+                onChange={handleOnChange}
               />
 
               <div className="flex justify-between items-center mb-4">
                 <div className="flex items-center">
-                  <input type="checkbox" id="loginCheck" className="form-check-input" />
-                  <label htmlFor="loginCheck" className="ml-2 text-gray-700">Remember me</label>
+                  <input
+                    type="checkbox"
+                    id="loginCheck"
+                    className="form-check-input"
+                  />
+                  <label htmlFor="loginCheck" className="ml-2 text-gray-700">
+                    Remember me
+                  </label>
                 </div>
                 <a href="#!" className="text-indigo-500 hover:underline">
                   Forgot password?
@@ -162,14 +225,21 @@ const handleRegisterSubmit = async (e: React.FormEvent) => {
             </form>
           </div>
 
-          <div id="pills-register" className={`tab-pane fade ${tab === 'register' ? 'show active' : 'hidden'}`}>
+          <div
+            id="pills-register"
+            className={`tab-pane fade ${
+              tab === "register" ? "show active" : "hidden"
+            }`}
+          >
             <form
               method="POST"
               onSubmit={handleRegisterSubmit}
               className="bg-white p-6 rounded-lg shadow-md"
             >
               <div className="text-center mb-3">
-                <p className="text-lg font-semibold pb-2 text-black">Sign up with:</p>
+                <p className="text-lg font-semibold pb-2 text-black">
+                  Sign up with:
+                </p>
                 <Button className={social_icons} type="button">
                   <i className="fab fa-google"></i>
                 </Button>
@@ -180,9 +250,19 @@ const handleRegisterSubmit = async (e: React.FormEvent) => {
                 type="text"
                 id="registerFullName"
                 placeholder="Full Name"
-                name="name"
+                name="username"
                 label="Full Name"
-                onChange={(e) => setRegisterData({ ...registerData, name: e.target.value })}
+                value={registerData.username}
+                onChange={handleOnChange}
+              />
+              <Input
+                type="number"
+                id="phone"
+                placeholder="Phone number"
+                name="phone"
+                label="Phone number"
+                value={registerData.phone}
+                onChange={handleOnChange}
               />
               <Input
                 type="email"
@@ -190,7 +270,8 @@ const handleRegisterSubmit = async (e: React.FormEvent) => {
                 placeholder="Email"
                 name="email"
                 label="Email"
-                onChange={(e) => setRegisterData({ ...registerData, email: e.target.value })}
+                value={registerData.email}
+                onChange={handleOnChange}
               />
               <Input
                 type="password"
@@ -198,7 +279,8 @@ const handleRegisterSubmit = async (e: React.FormEvent) => {
                 placeholder="Password"
                 name="password"
                 label="Password"
-                onChange={(e) => setRegisterData({ ...registerData, password: e.target.value })}
+                value={registerData.password}
+                onChange={handleOnChange}
               />
               <Input
                 type="password"
@@ -206,12 +288,19 @@ const handleRegisterSubmit = async (e: React.FormEvent) => {
                 placeholder="Repeat Password"
                 name="password_confirmation"
                 label="Repeat Password"
-                onChange={(e) => setRegisterData({ ...registerData, password_confirmation: e.target.value })}
+                value={registerData.password_confirmation}
+                onChange={handleOnChange}
               />
 
               <div className="flex justify-center items-center mb-4">
-                <input type="checkbox" id="registerCheck" className="form-check-input" />
-                <label htmlFor="registerCheck" className="ml-2 text-gray-500">I have read and agree to the terms</label>
+                <input
+                  type="checkbox"
+                  id="registerCheck"
+                  className="form-check-input"
+                />
+                <label htmlFor="registerCheck" className="ml-2 text-gray-500">
+                  I have read and agree to the terms
+                </label>
               </div>
 
               <Button
@@ -230,6 +319,3 @@ const handleRegisterSubmit = async (e: React.FormEvent) => {
 };
 
 export default LoginSignup;
-
-
-

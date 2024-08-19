@@ -1,9 +1,10 @@
 
 'use client';
 
+import { ToastContainer } from "react-toastify";
 import LoginSignup from "./auth/login/_components/LoginSignup";
 import { useSearchParams } from 'next/navigation';
-import page from "./auth/profile/page";
+
 
 
 export default function Home() {
@@ -11,7 +12,8 @@ export default function Home() {
   return (
     <>
      <LoginSignup searchParams={SearchParams}/>
-     <page></page>
+     <ToastContainer/>
+   
      </>
   
   );
