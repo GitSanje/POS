@@ -6,9 +6,7 @@ const { changeUserPassword } = require('../controllers/usersController');
  
 
 // ROute Level Middleware - To Protect Route
- router.use('/changepassword', verifyToken);
-
-
+ router.use('/verify', verifyToken);
 
 
  // Protected Routes

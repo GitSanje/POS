@@ -2,3 +2,11 @@
 20240815	17:09:54	f40f8029-a298-43ac-8faa-4cf8a1f166ce	ReferenceError: Cannot access 'UserModel' before initialization	POST	/api/users/register	undefined
 20240815	17:10:03	68268109-170b-4257-877e-22fe31c28c5b	ReferenceError: Cannot access 'UserModel' before initialization	POST	/api/users/register	undefined
 20240815	17:14:30	a65d47d3-2a88-4931-ad86-435ddec51e6c	SyntaxError: Expected double-quoted property name in JSON at position 65	POST	/api/users/lgoin	undefined
+20240819	11:47:12	30b2f8d3-fa1b-4589-9c24-4c9517492466	ValidationError: POSUser validation failed: phone: Path `phone` is required.	POST	/api/users/register	undefined
+20240819	11:51:43	ff12f24f-448e-4b67-90dc-ec87988da2e6	ValidationError: POSUser validation failed: phone: Path `phone` is required.	POST	/api/users/register	undefined
+20240819	11:54:59	f7a07416-fc30-457c-8a22-0fc16dc97be3	ValidationError: POSUser validation failed: phone: Path `phone` is required.	POST	/api/users/register	undefined
+20240819	11:55:20	df1c99f5-1d91-433e-be30-8c1b45a62b8f	ValidationError: POSUser validation failed: phone: Path `phone` is required.	POST	/api/users/register	undefined
+20240819	11:55:22	761f7a60-ef84-4d23-adf2-86bbdf74fdec	ValidationError: POSUser validation failed: phone: Path `phone` is required.	POST	/api/users/register	undefined
+20240819	11:55:22	59c55b94-dfdc-4827-acec-a01ca12753e5	ValidationError: POSUser validation failed: phone: Path `phone` is required.	POST	/api/users/register	undefined
+20240819	11:55:23	82f603b2-2b7f-4b0e-bf68-b5cce87ea818	ValidationError: POSUser validation failed: phone: Path `phone` is required.	POST	/api/users/register	undefined
+20240819	12:01:15	f07e722e-5198-43d9-95af-bfa391c2113e	SyntaxError: Expected double-quoted property name in JSON at position 89	POST	/api/users/login	undefined

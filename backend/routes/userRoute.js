@@ -9,4 +9,10 @@ router.post('/register', usersController.createNewUser);
 // Route for user login
 router.post('/login', usersController.loginauth);
 
+
+router.post('/refresh', usersController.RefreshToken);
+router.post('/checkAuth', usersController.checkAuth);
+
+
+
 module.exports = router;
