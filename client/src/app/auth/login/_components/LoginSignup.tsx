@@ -25,14 +25,17 @@ interface RegisterData {
   password_confirmation: string;
 }
 interface LoginData {
-  email: string,
-  password: string
+  email: string;
+  password: string;
 }
 const LoginSignup: React.FC<Props> = ({ searchParams }) => {
   const tab = searchParams.get("tab") || "login";
   const router = useRouter();
 
-  const [loginData, setLoginData] = useState<LoginData>({ email: "", password: "" });
+  const [loginData, setLoginData] = useState<LoginData>({
+    email: "",
+    password: "",
+  });
   const [registerData, setRegisterData] = useState<RegisterData>({
     username: "",
     phone: "",
@@ -42,7 +45,6 @@ const LoginSignup: React.FC<Props> = ({ searchParams }) => {
   });
 
   console.log(JSON.stringify(loginData));
-  
 
   const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -53,11 +55,12 @@ const LoginSignup: React.FC<Props> = ({ searchParams }) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(loginData),
+        credentials: "include",
       });
       if (!res.ok) {
         const datares = await res.json();
         console.log(datares);
-        
+
         toast.error(datares.error, {
           autoClose: 2000,
         });
@@ -79,13 +82,11 @@ const LoginSignup: React.FC<Props> = ({ searchParams }) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(registerData),
+        credentials: "include",
       });
-      console.log(res);
-      
+
       if (!res.ok) {
         const datares = await res.json();
-        
-        
 
         toast.error(datares.message, {
           autoClose: 2000,

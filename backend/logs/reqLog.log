@@ -159,3 +159,15 @@
 20240819	15:59:28	a138c0a3-2b69-49c9-8ad1-d94fe4790eb7	POST	/api/users/register	http://localhost:3000
 20240819	15:59:43	15df16fa-e97e-4f30-9255-e07eecb96e4f	OPTIONS	/api/users/login	http://localhost:3000
 20240819	15:59:43	67271ee1-7b4e-4614-ae49-0acbcfcf2a0c	POST	/api/users/login	http://localhost:3000
+20240819	16:04:51	e275aaed-d621-4afb-9c22-4bb967badd13	OPTIONS	/api/users/login	http://localhost:3000
+20240819	16:04:51	621fb96b-59d0-414b-b1ef-f31d6373e4de	POST	/api/users/login	http://localhost:3000
+20240819	16:09:19	e86969a2-b504-4058-a1b8-19b90357c5d7	OPTIONS	/api/users/login	http://localhost:3000
+20240819	16:09:19	7ddd90e3-6ca4-4223-8235-a8f51cc9efc2	POST	/api/users/login	http://localhost:3000
+20240819	16:09:26	676edff6-1b71-4f97-99c7-1b7a35ad1742	OPTIONS	/api/users/login	http://localhost:3000
+20240819	16:09:26	4fef80f2-848d-43f9-bf01-5b8ee7bc89be	POST	/api/users/login	http://localhost:3000
+20240819	16:28:12	bf8ae082-7351-4349-966f-0825e60c6c30	OPTIONS	/api/users/login	http://localhost:3000
+20240819	16:28:12	841e772c-dba5-4d8f-bff8-d8aa1ee15b98	POST	/api/users/login	http://localhost:3000
+20240819	16:30:42	9820567b-fc25-41ad-bd45-3cfe438a0b1d	OPTIONS	/api/users/login	http://localhost:3000
+20240819	16:30:42	f34db3f5-6e53-457b-bc36-48720966bdfd	POST	/api/users/login	http://localhost:3000
+20240820	10:33:37	8aac4db3-bb27-49c2-86bf-700761503652	OPTIONS	/api/users/register	http://localhost:3000
+20240820	10:33:37	c4a96859-1c36-4ba6-a706-c3d60162b4d6	POST	/api/users/register	http://localhost:3000

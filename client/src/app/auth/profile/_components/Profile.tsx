@@ -1,10 +1,10 @@
 import { Chrome, Crown, Mail, MailIcon } from "lucide-react";
 import React from "react";
 
-const Page = () => {
+const Profile: React.FC = () => {
   return (
     <section className="bg-gray-400 p-4 h-screen">
-      <div className="max-w-7xl mx-auto p-4 rounded-md grid-cols-1 lg:grid-cols-3 gap-4">
+      <div className="max-w-7xl mx-auto p-4 rounded-md grid-cols-1 lg:grid-cols-3 gap-4 text-black">
         {/* Profile Section */}
         <div className="col-span-1 lg:col-span-3 p-4 bg-gray-100 rounded-md">
           <div className="flex justify-between items-center mb-4">
@@ -56,7 +56,7 @@ const Page = () => {
           >
             sukrajchaudhary90@gmail.com
           </a>
-          <div className="flex justify-start gap-24 items-center  p-4 mt-4 rounded-md">
+          <div className="flex justify-start gap-24 items-center  p-4 mt-4 rounded-md text-black">
             <div className="flex justify-center items-center gap-3">
               <div className="h-16 w-16 flex rounded-full bg-blue-800 justify-center items-center">
                 <MailIcon
@@ -85,4 +85,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default Profile;
