@@ -30,7 +30,7 @@ const Page = ({ sidebarOpen ,setSideBarOpen}) => {
         sidebarOpen
           ? "translate-x-0 transition-transform duration-300 ease-in-out"
           : "-translate-x-full transition-transform duration-300 ease-in-out"
-      } top-0 left-0 flex-col w-64 h-screen px-5 py-8 overflow-y-auto bg-yellow-100 border-r dark:bg-gray-900 dark:border-gray-700`}
+      } top-0 left-0 flex-col w-64 h-screen px-5 py-8 overflow-y-auto bg-gray-300 border-r dark:bg-gray-900 dark:border-gray-700`}
     >
       <div className="flex flex-col justify-between flex-1 mt-6">
         <nav className="flex-1 -mx-3 space-y-3 ">
