@@ -10,7 +10,7 @@ const protectedRoutes = require('./routes/protectedRoute');
 const corsOptions = require('./config/corsOptions')
 const errorHandler = require('./middleware/errorHandler')
 const connectDB = require('./config/dbCon')
-
+const cookieParser = require('cookie-parser');
 
 const app = express()
 
@@ -22,6 +22,7 @@ const PORT = process.env.PORT || 4000
 app.use(logger) 
 app.use(cors(corsOptions))
 app.use(express.json());
+app.use(cookieParser());
 
 
 connectDB()
