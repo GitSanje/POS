@@ -8,7 +8,7 @@ export const AuthProvider = ({ children }) => {
     useEffect(()=> {
         const checkAuth = async() => {
             try {
-                const response = await ('/api/users/checkAuth',{ method: 'GET', credentials: 'include' })
+                const response = await ('http://localhost:3500/api/users/checkAuth',{ method: 'GET', credentials: 'include' })
                 if (response.ok) {
                     const data = await response.json();
                     setAuth(data.user); // Store user info, not token

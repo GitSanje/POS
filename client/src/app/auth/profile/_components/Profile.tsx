@@ -1,7 +1,12 @@
+'use'
 import { Chrome, Crown, Mail, MailIcon } from "lucide-react";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 
 const Profile: React.FC = () => {
+  
   return (
     <section className="bg-gray-400 p-4 h-screen">
       <div className="max-w-7xl mx-auto p-4 rounded-md grid-cols-1 lg:grid-cols-3 gap-4 text-black">
@@ -59,10 +64,7 @@ const Profile: React.FC = () => {
           <div className="flex justify-start gap-24 items-center  p-4 mt-4 rounded-md text-black">
             <div className="flex justify-center items-center gap-3">
               <div className="h-16 w-16 flex rounded-full bg-blue-800 justify-center items-center">
-                <MailIcon
-                  
-                  color="#eef2ee"
-                />
+                <MailIcon color="#eef2ee" />
               </div>
               <div>
                 <p className="font-semibold">Sukraj Chaudhary</p>
