@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import useAuth from "./useAuth";
 import useRefreshToken from "./useRefreshToken";
 import { axiosPrivate } from "./axios";
@@ -20,7 +20,7 @@ const useAxiosPrivate = () => {
       async (error) => {
         const prevRequest = error?.config;
         // 403 -> forbidden, potentially due to an expired access token
-        if (error?.response?.status == 403 && !prevRequest?.sent) {
+        if (error?.response?.status === 403 && !prevRequest?.sent) {
           prevRequest.sent = true;
           await refresh(); // Refresh the token (if needed, new cookie is set automatically)
           return axiosPrivate(prevRequest);

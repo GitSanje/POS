@@ -10,3 +10,7 @@
 20240819	11:55:22	59c55b94-dfdc-4827-acec-a01ca12753e5	ValidationError: POSUser validation failed: phone: Path `phone` is required.	POST	/api/users/register	undefined
 20240819	11:55:23	82f603b2-2b7f-4b0e-bf68-b5cce87ea818	ValidationError: POSUser validation failed: phone: Path `phone` is required.	POST	/api/users/register	undefined
 20240819	12:01:15	f07e722e-5198-43d9-95af-bfa391c2113e	SyntaxError: Expected double-quoted property name in JSON at position 89	POST	/api/users/login	undefined
+20240822	19:29:35	fd8e77b2-f286-4293-874a-575ba3316aab	Error: Cannot set headers after they are sent to the client	GET	/api/protected/profile	http://localhost:3000
+20240822	19:29:35	eda69526-826b-49d7-93c3-5ae05cd658be	Error: Cannot set headers after they are sent to the client	GET	/api/protected/profile	http://localhost:3000
+20240822	19:30:17	9c15947d-c384-4a58-88e9-276113095232	Error: Cannot set headers after they are sent to the client	GET	/api/protected/profile	http://localhost:3000
+20240822	19:30:17	17564dbd-1d3d-4bf2-9371-d8daef351db2	Error: Cannot set headers after they are sent to the client	GET	/api/protected/profile	http://localhost:3000

@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const User = require("../models/User");
 
 // without cookie
 // const verifyToken = async (req, res, next) => {
@@ -28,13 +29,14 @@ const jwt = require("jsonwebtoken");
 // };
 
 
-
 // with cookie
 
 const verifyToken = async (req, res, next) => {
   try {
     const token = req.cookies?.accessToken; // Read the token from the HTTP-only cookie
-
+    
+    console.log(token,'token');
+    
     if (!token) {
       return res
         .status(401)
@@ -45,7 +47,7 @@ const verifyToken = async (req, res, next) => {
     const { userID } = jwt.verify(token, process.env.JWT_SECRET_KEY);
 
     // Get User from Token
-    req.user = await UserModel.findById(userID).select("-password");
+    req.user = await User.findById(userID).select("-password").lean();
 
     if (!req.user) {
       return res

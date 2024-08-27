@@ -1,14 +1,14 @@
-"use client";
+'use client'
 
-import React, { ChangeEvent, useState , useEffect} from "react";
-// require('dotenv').config()
+import { signIn } from 'next-auth/react'
+import React, {  useState , ChangeEvent} from "react";
 import "./user.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import Input from "../../../../components/Input/Input";
 import Button from "../../../../components/Button/Button";
 
-import { useRouter } from "next/navigation";
-import { toast } from "react-toastify";
+import { useRouter, useSearchParams } from "next/navigation";
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 
@@ -27,9 +27,11 @@ interface LoginData {
   email: string;
   password: string;
 }
-const LoginSignup: React.FC<Props> = ({ searchParams }) => {
+const SiginIn: React.FC<Props> =  () => {
+
+  const searchParams = useSearchParams()
   const tab = searchParams.get("tab") || "login";
-  const router = useRouter();
+ 
 
   const [loginData, setLoginData] = useState<LoginData>({
     email: "",
@@ -42,85 +44,39 @@ const LoginSignup: React.FC<Props> = ({ searchParams }) => {
     password: "",
     password_confirmation: "",
   });
+  const [error, setError] = useState<string>('')
 
-  // const [user, setUser] = useState<string>(() => {
-  //   const ruser = localStorage.getItem('user');
-  //   if (ruser) {
-  //     try {
-  //       return JSON.parse(ruser) as string; 
-  //     } catch (e) {
-  //       console.error("Failed to parse user from localStorage", e);
-  //       return "";
-  //     }
-  //   }
-  //   return "";
-  // });
-  
-    
-  
+  const router = useRouter()
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+
+    const result = await signIn("credentials", {
+        redirect: false,
+        email: loginData.email,
+        password: loginData.password,
+      });
+
+      
+
+    if (result?.error) {
+       
+        toast.error(result.error, {
+          autoClose: 2000, 
+        })
+         setError(result.error)
+      } else {
+        toast.success("Logged in successfully!");
+        router.push('/') 
+      }
+  }
+
 
    
-
-
-  const handleLoginSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      const res = await fetch(`http://localhost:3500/api/users/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(loginData),
-        credentials: "include",
-      });
-      if (!res.ok) {
-        const datares = await res.json();
-       
-       
-        toast.error(datares.error, {
-          autoClose: 2000,
-        });
-    
-        return;
-      }
-      const result = await res.json()
-      // setUser(result.user)
-      localStorage.setItem('user',JSON.stringify(result.user))
-
-      toast.success("Login successful!");
-      router.push("/auth/profile");
-    } catch (error) {
-      toast.error("Login failed. Please check your credentials.");
-    }
+  const handleGoogleSignIn = () => {
+    signIn("google", { callbackUrl: "/dashboard" });
   };
 
-  const handleRegisterSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      const res = await fetch("http://localhost:3500/api/users/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(registerData),
-        credentials: "include",
-      });
-
-      if (!res.ok) {
-        const datares = await res.json();
-       console.log(datares);
-       
-        toast.error(datares.message, {
-          autoClose: 2000,
-        });
-        return;
-      }
-      toast.success("Registration successful! Please login.");
-      router.push("?tab=login");
-    } catch (error) {
-      toast.error("Registration failed. Please try again.");
-    }
-  };
 
   const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
@@ -178,17 +134,19 @@ const LoginSignup: React.FC<Props> = ({ searchParams }) => {
               tab === "login" ? "show active" : "hidden"
             }`}
           >
+            
             <form
               method="POST"
-              onSubmit={handleLoginSubmit}
+              onSubmit={handleSubmit}
               className="bg-white p-6 rounded-lg shadow-md"
             >
+                
               <div className="text-center mb-3">
                 <p className="text-lg font-semibold pb-2 text-black">
                   Sign in with:
                 </p>
                 <div className="social_accounts">
-                  <Button className={social_icons} type="button">
+                  <Button className={social_icons} type="button" onClick={handleGoogleSignIn}>
                     <i className="fab fa-google"></i>
                   </Button>
                 </div>
@@ -256,7 +214,7 @@ const LoginSignup: React.FC<Props> = ({ searchParams }) => {
           >
             <form
               method="POST"
-              onSubmit={handleRegisterSubmit}
+             
               className="bg-white p-6 rounded-lg shadow-md"
             >
               <div className="text-center mb-3">
@@ -334,11 +292,14 @@ const LoginSignup: React.FC<Props> = ({ searchParams }) => {
                 Sign up
               </Button>
             </form>
+
+            
           </div>
         </div>
       </div>
+
     </div>
   );
 };
 
-export default LoginSignup;
+export default SiginIn;

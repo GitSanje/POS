@@ -6,6 +6,46 @@ const asyncHandler = require("express-async-handler");
 const jwt = require("jsonwebtoken");
 const cookieOptions = require("../config/cookieOptions");
 
+const getAllUsers = asyncHandler( async ( req, res) => {
+  try {
+     const users = await User.find({}).lean().exec()
+  
+     if(!users || users.length ===0){
+      res.status(401).json({message: "No users found"})
+     }
+     res.status(200).json({users: users})
+  
+  } catch (error) {
+    res.status(500).json({ message: "An error occurred while fetching users" });
+  }
+
+})
+
+const checkAuth = asyncHandler( async ( req, res, next) => {
+  try {
+     const token = req.cookies.accessToken
+     console.log(token)
+     if(!token){
+      res.status(401).json({ message: 'Not authenticated' })
+     }
+    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY) 
+
+    const userId = decoded.userID
+
+    const user = await User.findById(userId).select('-password').lean()
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    
+    req.user = user;
+
+    next()
+  } catch (error) {
+    return res.status(401).json({ message: 'Authentication failed' });
+  }
+})
+
+
 // @desc Create new user
 // @route POST /users
 // @access Private
@@ -100,10 +140,10 @@ const loginauth = asyncHandler(async (req, res) => {
       maxAge: 30 * 24 * 60 * 60 * 1000, // Refresh token valid for 30 days
     });
 
-    console.log('Set-Cookie header:', res.getHeader('Set-Cookie'));
+    // console.log('Set-Cookie header:', res.getHeader('Set-Cookie'));
 
     refreshTokens.push(refreshToken);
-    res.status(200).json({ status: "success", message: "Login Successfully" });
+    res.status(200).json({ status: "success", message: "Login Successfully" , user: user.username});
   } catch (error) {
     res.status(500).json({ error: "Login failed" });
   }
@@ -112,6 +152,8 @@ const loginauth = asyncHandler(async (req, res) => {
 const RefreshToken = asyncHandler(async (req, res) => {
   // const refreshToken = req.body.token;
   const refreshToken = req.cookies?.refreshToken; 
+  // console.log(refreshToken,'refreshT');
+  
   if (!refreshToken) return res.status(401).json("You are not authenticated!");
 
   if (!refreshTokens.includes(refreshToken)) {
@@ -119,6 +161,7 @@ const RefreshToken = asyncHandler(async (req, res) => {
   }
 
   jwt.verify(refreshToken, process.env.JWT_SECRET_KEY, (err, user) => {
+    
     err && console.log(err);
 
     refreshTokens = refreshTokens.filter((token) => token !== refreshToken);
@@ -136,7 +179,7 @@ const RefreshToken = asyncHandler(async (req, res) => {
       maxAge: 30 * 24 * 60 * 60 * 1000, 
     });
 
-    res.status(200).json({
+    return res.status(200).json({
       message: " Refreshed successfully",
       user: user,
       accessToken: newAccessToken
@@ -145,8 +188,9 @@ const RefreshToken = asyncHandler(async (req, res) => {
 });
 
 const logoutUser = (req, res) => {
-  res.clearCookie("authToken");
-  res.json({ message: "Logged out successfully" });
+  res.clearCookie("accessToken");
+  res.clearCookie("refreshToken");
+  res.status(200).json({ message: "Logged out successfully" });
 };
 
 const changeUserPassword = asyncHandler(async (req, res) => {
@@ -172,7 +216,7 @@ const changeUserPassword = asyncHandler(async (req, res) => {
 
 const generateAccessToken = (user) => {
   return jwt.sign({ userID: user._id }, process.env.JWT_SECRET_KEY, {
-    expiresIn: "30s",
+    expiresIn: "30min",
   });
 };
 
@@ -184,24 +228,7 @@ const generateRefreshToken = (user) => {
 
 
 
-const checkAuth = asyncHandler( async (req, res) => {
-  try {
-    
-    const token = req.cookies.accessToken || '';
-    if (!token) {
-      return res.status(401).json({ message: 'Not authenticated' });
-  }
-  const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
-  const user = await User.findById(decoded.userID).lean();
-  if (!user) {
-    return res.status(401).json({ message: 'User not found' });
-}
-res.json({ user });
 
-  } catch (error) {
-    res.status(401).json({ message: 'Authentication failed' });
-  }
-})
 
 module.exports = {
   createNewUser,
@@ -209,5 +236,7 @@ module.exports = {
   changeUserPassword,
   RefreshToken,
   logoutUser,
-  checkAuth
+  checkAuth,
+  getAllUsers,
+
 };
