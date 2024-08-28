@@ -10,7 +10,8 @@ import Button from "../../../../components/Button/Button";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import { useFormState, useFormStatus } from 'react-dom';
+import { signup } from '../auth';
 
 interface Props {
   searchParams: URLSearchParams;
@@ -31,6 +32,9 @@ const SiginIn: React.FC<Props> =  () => {
 
   const searchParams = useSearchParams()
   const tab = searchParams.get("tab") || "login";
+
+
+  const [ state, action ] = useFormState(signup, undefined)
  
 
   const [loginData, setLoginData] = useState<LoginData>({
@@ -74,7 +78,7 @@ const SiginIn: React.FC<Props> =  () => {
 
    
   const handleGoogleSignIn = () => {
-    signIn("google", { callbackUrl: "/dashboard" });
+    signIn("google", { callbackUrl: "/" });
   };
 
 
@@ -214,6 +218,7 @@ const SiginIn: React.FC<Props> =  () => {
           >
             <form
               method="POST"
+              action={action}
              
               className="bg-white p-6 rounded-lg shadow-md"
             >
@@ -221,7 +226,7 @@ const SiginIn: React.FC<Props> =  () => {
                 <p className="text-lg font-semibold pb-2 text-black">
                   Sign up with:
                 </p>
-                <Button className={social_icons} type="button">
+                <Button className={social_icons} type="button" onClick={handleGoogleSignIn}>
                   <i className="fab fa-google"></i>
                 </Button>
               </div>
@@ -236,6 +241,9 @@ const SiginIn: React.FC<Props> =  () => {
                 value={registerData.username}
                 onChange={handleOnChange}
               />
+              {state?.errors?.name && (
+              <p className="text-sm text-red-500">{state.errors.name}</p>
+           )}
               <Input
                 type="number"
                 id="phone"
@@ -254,6 +262,9 @@ const SiginIn: React.FC<Props> =  () => {
                 value={registerData.email}
                 onChange={handleOnChange}
               />
+              {state?.errors?.email && (
+          <p className="text-sm text-red-500">{state.errors.email}</p>
+        )}
               <Input
                 type="password"
                 id="registerPassword"
@@ -263,6 +274,16 @@ const SiginIn: React.FC<Props> =  () => {
                 value={registerData.password}
                 onChange={handleOnChange}
               />
+              {state?.errors?.password && (
+              <div className="text-sm text-red-500 pb-3">
+                <p>Password must:</p>
+                <ul>
+                  {state.errors.password.map((error) => (
+                    <li key={error}>- {error}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
               <Input
                 type="password"
                 id="registerRepeatPassword"
@@ -284,13 +305,7 @@ const SiginIn: React.FC<Props> =  () => {
                 </label>
               </div>
 
-              <Button
-                type="submit"
-                className="w-full bg-indigo-500 text-white py-2 rounded-lg "
-                id="signupbtn"
-              >
-                Sign up
-              </Button>
+              <SignupButton/>
             </form>
 
             
@@ -303,3 +318,15 @@ const SiginIn: React.FC<Props> =  () => {
 };
 
 export default SiginIn;
+
+
+export function SignupButton(){
+
+  const { pending } = useFormStatus();
+
+  return (
+    <Button aria-disabled={pending} type="submit"  className="w-full bg-indigo-500 text-white py-2 rounded-lg ">
+      {pending ? 'Submitting...' : 'Signup'}
+    </Button>
+  );
+}

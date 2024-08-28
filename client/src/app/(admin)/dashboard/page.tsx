@@ -12,7 +12,6 @@ import { signIn, signOut } from 'next-auth/react'
 import Button from '../../../components/Button/Button'
 
 import { useSearchParams } from 'next/navigation';
-import { log } from 'console';
 
 const page:React.FC = async () => {
 
