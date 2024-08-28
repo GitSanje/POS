@@ -17,7 +17,14 @@ async function main() {
             password
           }
     })
-    console.log({ user })
+
+    const account = await prisma.account.create({
+        data: { userId: user.id,
+         type: 'credentials',
+         provider: 'credentials',
+         providerAccountId: user.id
+    }})
+    console.log({ user }, {account})
     
 }
 

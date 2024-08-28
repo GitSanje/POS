@@ -14,20 +14,22 @@ export const authOptions: NextAuthOptions = {
   providers: [
     GoogleProvider({
       profile(profile: GoogleProfile) {
-        console.log(profile);
+        //console.log("profile ", { profile });
+        const id = profile.id || profile.sub || ""; // Use `profile.sub` if `profile.id` is missing
         return {
           ...profile,
-          role: profile.role ?? "user",
-          id: profile.id,
-          image: profile.avatar_url,
+          role: profile.role ?? "USER",
+          id: id.toString(),
+          image: profile.picture,
         };
       },
+
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
       authorization: {
         params: {
           prompt: "consent",
-          access_type: "offline",
+          access_type: "offline", // This ensures we get a refresh token
           response_type: "code",
         },
       },
@@ -42,7 +44,7 @@ export const authOptions: NextAuthOptions = {
         },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials ) {
+      async authorize(credentials) {
         // This is where you need to retrieve user data
         // to verify with credentials
         // Docs: https://next-auth.js.org/configuration/providers/credentials
@@ -79,8 +81,8 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    session: ({ session, token }) => {
-      console.log("Session Callback", { session, token });
+    session: async ({ session, token }) => {
+     // console.log("Session Callback", { session, token });
       return {
         ...session,
         user: {
@@ -90,8 +92,8 @@ export const authOptions: NextAuthOptions = {
         },
       };
     },
-    jwt: ({ token, user }) => {
-      console.log("JWT Callback", { token, user });
+    jwt: async ({ token, user }) => {
+      //console.log("JWT Callback", { token, user });
       if (user) {
         const u = user as unknown as any;
         return {
@@ -102,8 +104,72 @@ export const authOptions: NextAuthOptions = {
       }
       return token;
     },
+
+    async signIn({ user, account, profile }) {
+      // console.log(account, "account from signIn", profile.picture);
+
+      if (account?.provider === "google") {
+        try {
+          const existingUser = await prisma.user.findUnique({
+            where: {
+              email: user.email!,
+            },
+          });
+
+          if (!existingUser) {
+            await prisma.user.create({
+              data: {
+                email: user.email!,
+                name: user.name!,
+                image: profile?.picture || null,
+                role: profile?.role ?? "USER",
+              },
+            });
+          }
+
+          await prisma.account.upsert({
+            where: {
+              provider_providerAccountId: {
+                provider: account.provider,
+                providerAccountId: account.providerAccountId,
+              },
+            },
+            update: {
+              access_token: account.access_token,
+              expires_at: account.expires_at,
+              refresh_token: account.refresh_token,
+              id_token: account.id_token,
+              scope: account.scope,
+              token_type: account.token_type,
+              // session_state: account.session_state,
+            },
+            create: {
+              userId: existingUser?.id || user.id,
+              type: account.type,
+              provider: account.provider,
+              providerAccountId: account.providerAccountId,
+              access_token: account.access_token,
+              expires_at: account.expires_at,
+              refresh_token: account.refresh_token,
+              id_token: account.id_token,
+              scope: account.scope,
+              token_type: account.token_type,
+              session_state: account.session_state,
+            },
+          });
+
+          return true;
+        } catch (error) {
+          console.error("Error in signIn callback:", error);
+          return false;
+        }
+      }
+
+      return true;
+    },
   },
   pages: {
     signIn: "/auth/signin",
   },
+  adapter: PrismaAdapter(prisma),
 };

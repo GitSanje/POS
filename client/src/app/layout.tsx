@@ -1,10 +1,11 @@
 import { Inter } from "next/font/google";
-import "./styles/globals.css";
+
 import { Metadata } from 'next';
 import page from "./auth/profile/page";
 import { Providers } from "./providers";
 import { ToastContainer } from "react-toastify";
 const inter = Inter({ subsets: ["latin"] });
+import './styles/globals.css'
 
 export const metadata: Metadata = {
   title: 'Vendify',
@@ -29,3 +30,27 @@ export default function RootLayout({ children }:{
     </html>
   );
 }
+
+
+// import { ClerkProvider, SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
+// import "./styles/globals.css";
+
+// export default function RootLayout({ children }: { children: React.ReactNode }) {
+//   return (
+//     <ClerkProvider>
+//       <html lang="en">
+//         <body>
+//           <header>
+//             <SignedOut>
+//               <SignInButton />
+//             </SignedOut>
+//             <SignedIn>
+//               <UserButton />
+//             </SignedIn>
+//           </header>
+//           <main>{children}</main>
+//         </body>
+//       </html>
+//     </ClerkProvider>
+//   )
+// }
