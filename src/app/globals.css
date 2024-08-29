@@ -1,0 +1,101 @@
+/* globals.css */
+
+/* General Styles */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+body {
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+  scroll-behavior: smooth;
+}
+
+
+/* Navbar Styles */
+
+
+/* Keyframes for Animations */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
+  }
+}
+@keyframes custom-bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+.animate-bounce {
+  animation: custom-bounce 2s infinite;
+}
+
+/* Login/Signup Page Styles */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+body {
+  	margin: 0; line-height: normal;
+}
+:root {
+  	
+  	/* fonts */
+  	--body-1-medium: Inter;
+  	
+  	/* font sizes */
+  	--font-size-lg: 1.125rem;
+  	--body-1-medium-size: 1rem;
+  	--font-size-xs-5: 0.719rem;
+  	--font-size-sm-4: 0.838rem;
+  	--font-size-base-4: 0.963rem;
+  	--font-size-lgi-2: 1.2rem;
+  	
+  	/* Colors */
+  	--color-white: #fff;
+  	--color-black: #000;
+  	--color-gainsboro: #d9d9d9;
+  	--error-error-50: #feeceb;
+  	--error-error-700: #aa3028;
+  	--grey-grey-500: #667085;
+  	--grey-grey-600: #5d6679;
+  	--color-darkslategray-100: #444;
+  	--grey-grey-800: #383e49;
+  	--primary-primary-700: #0f50aa;
+  	--color-dimgray: #666;
+  	--color-whitesmoke: #f0f1f3;
+  	
+  	/* Gaps */
+  	--gap-xl: 1.25rem;
+  	--gap-9xs-8: 0.237rem;
+  	--gap-5xl: 1.5rem;
+  	--gap-5xs-7: 0.481rem;
+  	--gap-11xs-9: 0.118rem;
+  	--gap-xs-5: 0.718rem;
+  	--gap-11xl-7: 1.918rem;
+  	
+  	/* Paddings */
+  	--padding-base: 1rem;
+  	--padding-19xl: 2.375rem;
+  	--padding-11xs-9: 0.118rem;
+  	--padding-5xs-7: 0.481rem;
+  	--padding-7xs-8: 0.362rem;
+  	--padding-2xs: 0.687rem;
+  	--padding-4xs: 0.562rem;
+  	
+  	/* Border radiuses */
+  	--br-5xs: 8px;
+  	--br-base-4: 15.4px;
+  	--br-9xs-8: 3.8px;
+  	--br-3xs-6: 9.6px;
+  	--br-5xs-7: 7.7px;
+  	
+}
